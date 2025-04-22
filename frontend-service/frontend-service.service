@@ -1,0 +1,17 @@
+[Unit]
+Description=SlurmTalks Frontend Service
+Requires=backend-service.service
+After=network.target backend-service.service
+
+[Service]
+Type=simple
+User=sysadm
+Group=sysadm
+WorkingDirectory=/home/sysadm/slurm_blog/frontend-service
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/npm run start
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

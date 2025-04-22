@@ -1,0 +1,16 @@
+[Unit]
+Description=SlurmTalks Backend Service
+After=network.target postgresql.service redis-server.service
+
+[Service]
+Type=simple
+User=sysadm
+Group=sysadm
+WorkingDirectory=/home/sysadm/slurm_blog/backend-service
+Environment="GIN_MODE=release"
+ExecStart=/home/sysadm/slurm_blog/backend-service/backend-service
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
