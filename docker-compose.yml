@@ -3,7 +3,6 @@ services:
     image: web-ui:0.1
     build:
       context: ./frontend-service/
-      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     depends_on:
@@ -12,12 +11,15 @@ services:
     image: sitter:0.1
     build:
       context: ./backend-service/
-      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     depends_on:
-      - redis
-      - db
+      db:
+        condition: service_healthy
+        restart: true
+      redis:
+        condition: service_healthy
+        restart: true
     environment:
       POSTGRES_USER: ublog
       POSTGRES_PASSWORD: ublog_password
@@ -29,6 +31,7 @@ services:
       REDIS_DB: 0
       JWT_SECRET_KEY: secret_key
       MIGRATE_IN_CODE: true
+
   db:
     image: postgres:17
     environment:
@@ -39,13 +42,23 @@ services:
       - "5432:5432"
     volumes:
       - blog_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
   redis:
     image: redis:7
     ports:
       - "6379:6379"
     volumes:
       - blog_redis:/data
-
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 1s
+      timeout: 3s
+      retries: 20
 volumes:
   blog_pg:
   blog_redis:
