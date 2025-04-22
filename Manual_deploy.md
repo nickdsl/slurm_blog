@@ -23,11 +23,11 @@ alter database blog owner to blog_user ;
 
 # working with backend
 cd backend-service
-# building backend
-go build -o backend-service
-
 cp .env.example .env
 # (optionally) edit .env file for customizing purposes
+
+# building backend
+go build -o backend-service
 
 # making System-D service
 sudo cp backend-service.service /etc/systemd/system/
@@ -36,15 +36,15 @@ sudo systemctl enable --now backend-service
 
 # working with frontend service
 cd ../frontend-service
+cp .env.example .env
+# (optionally) edit .env file for customizing purposes
+
 npm install
 npm audit fix --force
 npm run build 
 
-cp .env.example .env
-# (optionally) edit .env file for customizing purposes
-
 # making System-D service
 sudo cp frontend-service.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable --now
+sudo systemctl enable --now frontend-service.service
 ```
