@@ -10,7 +10,8 @@ COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o ./sitter
 
-FROM scratch AS sitter
+#FROM scratch AS sitter
+FROM curlimages/curl as sitter
 
 COPY --from=builder /app/sitter /sitter
 

@@ -31,7 +31,11 @@ services:
       REDIS_DB: 0
       JWT_SECRET_KEY: secret_key
       MIGRATE_IN_CODE: true
-
+    healthcheck:
+      test: ["CMD-SHELL", "curl http://localhost:8080/healthz | grep '{\"status\":\"ok\"}'"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
   db:
     image: postgres:17
     environment:
@@ -62,3 +66,4 @@ services:
 volumes:
   blog_pg:
   blog_redis:
+
