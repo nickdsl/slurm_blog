@@ -1,12 +1,18 @@
 services:
   frontend:
     image: web-ui:0.1
+    build:
+      context: ./frontend-service/
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     depends_on:
       - backend
   backend:
     image: sitter:0.1
+    build:
+      context: ./backend-service/
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     depends_on:
